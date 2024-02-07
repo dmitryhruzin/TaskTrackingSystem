@@ -1,65 +1,48 @@
-﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.DataBase.Repositories
+namespace DataAccessLayer.DataBase.Repositories;
+
+public class GenericRepository<T> : IRepository<T> where T : BaseEntity
 {
-    /// <summary>
-    ///   Implements a genericRepository
-    /// </summary>
-    /// <typeparam name="T">BaseEntity abstract class</typeparam>
-    public class GenericRepository<T> : IRepository<T> where T : BaseEntity
+    protected private readonly DbSet<T> _dbSet;
+
+    public GenericRepository(TaskDbContext dbContext)
     {
-        protected private readonly TaskDbContext dbContext;
+        _dbSet = dbContext.Set<T>();
+    }
+    
+    public async Task<IReadOnlyCollection<T>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 
-        /// <summary>Initializes a new instance of the <see cref="GenericRepository{T}" /> class.</summary>
-        /// <param name="dbContext">The database context.</param>
-        public GenericRepository(TaskDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+    public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .FirstAsync(e => e.Id == id, cancellationToken);
+    }
 
-        /// <summary>Adds entity asynchronous.</summary>
-        /// <param name="entity">The entity.</param>
-        public async Task AddAsync(T entity)
-        {
-            await dbContext.Set<T>().AddAsync(entity);
-        }
+    public async Task AddAsync(T entity, CancellationToken cancellationToken)
+    {
+        await _dbSet.AddAsync(entity, cancellationToken);
+    }
 
-        /// <summary>Deletes entity specified entity.</summary>
-        /// <param name="entity">The entity.</param>
-        public void Delete(T entity)
-        {
-            dbContext.Set<T>().Remove(entity);
-        }
+    public void Delete(T entity)
+    {
+        _dbSet.Remove(entity);
+    }
 
-        /// <summary>Deletes entity by identifier asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        public async Task DeleteByIdAsync(int id)
-        {
-            Delete(await GetByIdAsync(id));
-        }
+    public async Task DeleteByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        Delete(await GetByIdAsync(id, cancellationToken));
+    }
 
-        /// <summary>Gets all entities asynchronous.</summary>
-        /// <returns>Entities</returns>
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await dbContext.Set<T>().ToListAsync();
-        }
-
-        /// <summary>Gets the entity by identifier asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>Entity</returns>
-        public async Task<T> GetByIdAsync(int id)
-        {
-            return await dbContext.Set<T>().FindAsync(id);
-        }
-
-        /// <summary>Updates entity specified entity.</summary>
-        /// <param name="entity">The entity.</param>
-        public void Update(T entity)
-        {
-            dbContext.Set<T>().Update(entity);
-        }
+    public void Update(T entity)
+    {
+        _dbSet.Update(entity);
     }
 }

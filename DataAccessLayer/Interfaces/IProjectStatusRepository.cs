@@ -1,11 +1,8 @@
-﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.Interfaces
+namespace DataAccessLayer.Interfaces;
+
+public interface IProjectStatusRepository : IRepository<ProjectStatus>
 {
-    /// <summary>
-    ///   Describes a project status repository
-    /// </summary>
-    public interface IProjectStatusRepository : IRepository<ProjectStatus>
-    {
-    }
+    
 }

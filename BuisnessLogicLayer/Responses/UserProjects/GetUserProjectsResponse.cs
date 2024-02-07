@@ -1,0 +1,3 @@
+namespace BuisnessLogicLayer.Responses.UserProjects;
+
+public record GetUserProjectsResponse(IReadOnlyCollection<GetUserProjectResponse> UserProjects);

@@ -1,48 +1,50 @@
-﻿using DataAccessLayer.Entities;
+using System.Linq.Expressions;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.DataBase.Repositories
+namespace DataAccessLayer.DataBase.Repositories;
+
+public class ProjectRepository : GenericRepository<Project>, IProjectRepository
 {
-    /// <summary>
-    ///  Implements a projectRepository
-    /// </summary>
-    public class ProjectRepository : GenericRepository<Project>, IProjectRepository
+    public ProjectRepository(TaskDbContext dbContext) : base(dbContext)
     {
-        /// <summary>Initializes a new instance of the <see cref="ProjectRepository" /> class.</summary>
-        /// <param name="dbContext">The database context.</param>
-        public ProjectRepository(TaskDbContext dbContext) : base(dbContext)
-        {
+    }
 
-        }
+    public async Task<IReadOnlyCollection<Project>> GetAllWithDetailsAsync(CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Status)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.Manager)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .ToListAsync(cancellationToken);
+    }
 
-        /// <summary>Gets all projects with details asynchronous.</summary>
-        /// <returns>Projects</returns>
-        public async Task<IEnumerable<Project>> GetAllWithDetailsAsync()
-        {
-            return await dbContext.Projects
-                .Include(t => t.Status)
-                .Include(t => t.Tasks)
-                    .ThenInclude(t => t.Manager)
-                .Include(t => t.Tasks)
-                    .ThenInclude(t => t.UserProjects)
-                    .ThenInclude(t => t.User)
-                .ToListAsync();
-        }
+    public async Task<Project> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Status)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.Manager)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .FirstAsync(t => t.Id == id, cancellationToken);
+    }
 
-        /// <summary>Gets a project by identifier with details asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>Project</returns>
-        public async Task<Project> GetByIdWithDetailsAsync(int id)
-        {
-            return await dbContext.Projects
-                .Include(t => t.Status)
-                .Include(t => t.Tasks)
-                    .ThenInclude(t => t.Manager)
-                .Include(t => t.Tasks)
-                    .ThenInclude(t => t.UserProjects)
-                    .ThenInclude(t => t.User)
-                .FirstOrDefaultAsync(t => t.Id == id);
-        }
+    public async Task<IReadOnlyCollection<Project>> GetByExpressionAsync(Expression<Func<Project, bool>> expression, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Status)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.Manager)
+            .Include(t => t.Tasks)
+                .ThenInclude(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .Where(expression)
+            .ToListAsync(cancellationToken);
     }
 }

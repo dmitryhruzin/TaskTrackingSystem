@@ -1,16 +1,12 @@
-﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.Interfaces
+namespace DataAccessLayer.Interfaces;
+
+public interface IUserProjectRepository : IRepository<UserProject>
 {
-    /// <summary>
-    ///   Describes an user project repository
-    /// </summary>
-    public interface IUserProjectRepository : IRepository<UserProject>
-    {
-        /// <summary>Gets all userprojects with details asynchronous.</summary>
-        /// <returns>
-        ///   UserProjects
-        /// </returns>
-        Task<IEnumerable<UserProject>> GetAllWithDetailsAsync();
-    }
+    Task<IReadOnlyCollection<UserProject>> GetAllWithDetailsAsync(CancellationToken cancellationToken);
+
+    Task AddRangeAsync(IEnumerable<UserProject> entities, CancellationToken cancellationToken);
+
+    Task DeleteRangeAsync(IEnumerable<int> ids, CancellationToken cancellationToken);
 }

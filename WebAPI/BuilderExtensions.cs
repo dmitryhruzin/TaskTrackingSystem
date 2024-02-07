@@ -9,22 +9,6 @@ namespace WebAPI
 {
     public static class BuilderExtensions
     {
-        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContext<TaskDbContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
-        }
-
-        public static void ConfigureIdentity(this IServiceCollection services)
-        {
-            services.AddIdentity<User, IdentityRole<int>>()
-                .AddRoles<IdentityRole<int>>()
-                .AddEntityFrameworkStores<TaskDbContext>()
-                .AddDefaultTokenProviders();
-        }
-
         public static void ConfigureLogger(this ILoggingBuilder logging, IConfiguration configuration)
         {
             var logger = new LoggerConfiguration()
@@ -35,36 +19,6 @@ namespace WebAPI
             logging.ClearProviders();
 
             logging.AddSerilog(logger);
-        }
-
-        public static void ConfigureServices(this IServiceCollection services)
-        {
-            services.AddTransient<IAuthService, AuthService>();
-
-            services.AddTransient<IEmailService, EmailService>();
-
-            services.AddTransient<IUserService, UserService>();
-
-            services.AddTransient<IGenerateTokenService, GenerateTokenService>();
-
-            services.AddTransient<IProjectService, ProjectService>();
-
-            services.AddTransient<ITaskService, TaskService>();
-
-            services.AddTransient<ITokenService, TokenService>();
-
-            services.AddTransient<IUserProjectService, UserProjectService>();
-        }
-
-        public static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
-        {
-            var emailOptionsConfiguration = configuration.GetSection("Email");
-
-            services.Configure<EmailOptions>(emailOptionsConfiguration);
-
-            var tokenOptionsConfiguration = configuration.GetSection("Token");
-
-            services.Configure<BuisnessLogicLayer.Models.TokenOptions>(tokenOptionsConfiguration);
         }
 
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)

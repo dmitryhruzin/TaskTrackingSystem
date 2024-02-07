@@ -1,0 +1,3 @@
+namespace BuisnessLogicLayer.Responses.ProjectStatuses;
+
+public record GetProjectStatusesResponse(IReadOnlyCollection<GetProjectStatusResponse> ProjectStatuses);

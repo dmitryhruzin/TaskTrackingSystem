@@ -1,46 +1,47 @@
-﻿using DataAccessLayer.Entities;
+using System.Linq.Expressions;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.DataBase.Repositories
+namespace DataAccessLayer.DataBase.Repositories;
+
+public class AssignmentRepository : GenericRepository<Assignment>, IAssignmentRepository 
 {
-    /// <summary>
-    ///   Implements an assignmentRepository
-    /// </summary>
-    public class AssignmentRepository : GenericRepository<Assignment>, IAssignmentRepository
+    public AssignmentRepository(TaskDbContext dbContext) : base(dbContext)
     {
-        /// <summary>Initializes a new instance of the <see cref="AssignmentRepository" /> class.</summary>
-        /// <param name="dbContext">The database context.</param>
-        public AssignmentRepository(TaskDbContext dbContext) : base(dbContext)
-        {
+    }
 
-        }
+    public async Task<IReadOnlyCollection<Assignment>> GetAllWithDetailsAsync(CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Manager)
+            .Include(t => t.Status)
+            .Include(t => t.Project)
+            .Include(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .ToListAsync(cancellationToken);
+    }
 
-        /// <summary>Gets all assignments with details asynchronous.</summary>
-        /// <returns>The Assignments</returns>
-        public async Task<IEnumerable<Assignment>> GetAllWithDetailsAsync()
-        {
-            return await dbContext.Assignments
-                .Include(t => t.Manager)
-                .Include(t => t.Status)
-                .Include(t => t.Project)
-                .Include(t => t.UserProjects)
-                    .ThenInclude(t => t.User)
-                .ToListAsync();
-        }
+    public async Task<Assignment> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Manager)
+            .Include(t => t.Status)
+            .Include(t => t.Project)
+            .Include(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .FirstAsync(t => t.Id == id, cancellationToken);
+    }
 
-        /// <summary>Gets an assignment by identifier with details asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>The Assignment</returns>
-        public async Task<Assignment> GetByIdWithDetailsAsync(int id)
-        {
-            return await dbContext.Assignments
-                .Include(t => t.Manager)
-                .Include(t => t.Status)
-                .Include(t => t.Project)
-                .Include(t => t.UserProjects)
-                    .ThenInclude(t => t.User)
-                .FirstOrDefaultAsync(t => t.Id == id);
-        }
+    public async Task<IReadOnlyCollection<Assignment>> GetByExpressionAsync(Expression<Func<Assignment, bool>> expression, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(t => t.Manager)
+            .Include(t => t.Status)
+            .Include(t => t.Project)
+            .Include(t => t.UserProjects)
+                .ThenInclude(t => t.User)
+            .Where(expression)
+            .ToListAsync(cancellationToken);
     }
 }

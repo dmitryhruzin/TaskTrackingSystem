@@ -1,46 +1,34 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BuisnessLogicLayer.Requests.Tokens;
+using BuisnessLogicLayer.Responses.Tokens;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    /// <summary>
-    ///   TokensController
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TokensController : ControllerBase
     {
-        readonly ITokenService tokenService;
-
-        /// <summary>Initializes a new instance of the <see cref="TokensController" /> class.</summary>
-        /// <param name="tokenService">The token service.</param>
-        public TokensController(ITokenService tokenService)
+        private readonly IMediator _mediator;
+        
+        public TokensController(IMediator mediator)
         {
-            this.tokenService = tokenService;
+            _mediator = mediator;
         }
-
-        /// <summary>Refreshes the token.</summary>
-        /// <param name="tokenModel">The token model.</param>
-        /// <returns>
-        ///   OkObjectResult
-        /// </returns>
+        
         [HttpPost("refresh")]
-        public async Task<ActionResult<TokenModel>> Refresh([FromBody] TokenModel tokenModel)
+        public async Task<ActionResult<GetTokenResponse>> Refresh([FromBody] RefreshTokenRequest request)
         {
-            var model = await tokenService.Refresh(tokenModel);
+            var response = await _mediator.Send(request);
 
-            return Ok(model);
+            return Ok(response);
         }
-
-        /// <summary>Revokes the token.</summary>
-        /// <param name="tokenModel">The token model.</param>
-        /// <returns>
-        ///   OkObjectResult
-        /// </returns>
+        
         [HttpPost("revoke"), Authorize]
-        public async Task<ActionResult> Revoke([FromBody] TokenModel tokenModel)
+        public async Task<ActionResult> Revoke([FromBody] RevokeTokenRequest request)
         {
-            await tokenService.Revoke(tokenModel);
+            await _mediator.Send(request);
 
             return Ok();
         }

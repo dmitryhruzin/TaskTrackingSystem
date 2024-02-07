@@ -1,18 +1,22 @@
-﻿using DataAccessLayer.Entities;
+using System.Linq.Expressions;
+using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.DataBase.Repositories
+namespace DataAccessLayer.DataBase.Repositories;
+
+public class PositionRepository : GenericRepository<Position>, IPositionRepository
 {
-    /// <summary>
-    ///   Implements a positionRepository
-    /// </summary>
-    public class PositionRepository : GenericRepository<Position>, IPositionRepository
+    public PositionRepository(TaskDbContext dbContext) : base(dbContext)
     {
-        /// <summary>Initializes a new instance of the <see cref="PositionRepository" /> class.</summary>
-        /// <param name="dbContext">The database context.</param>
-        public PositionRepository(TaskDbContext dbContext) : base(dbContext)
-        {
+    }
 
-        }
+    public async Task<IReadOnlyCollection<Position>> GetAllByExpressionAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Where(expression)
+            .Include(t=>t.UserProjects)
+                .ThenInclude(t=>t.User)
+            .ToListAsync(cancellationToken);
     }
 }

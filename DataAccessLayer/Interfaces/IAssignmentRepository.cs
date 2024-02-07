@@ -1,23 +1,13 @@
-﻿using DataAccessLayer.Entities;
+using System.Linq.Expressions;
+using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.Interfaces
+namespace DataAccessLayer.Interfaces;
+
+public interface IAssignmentRepository : IRepository<Assignment>
 {
-    /// <summary>
-    ///   Describes an assignment repository
-    /// </summary>
-    public interface IAssignmentRepository : IRepository<Assignment>
-    {
-        /// <summary>Gets all assignments with details asynchronous.</summary>
-        /// <returns>
-        ///  The Assignments
-        /// </returns>
-        Task<IEnumerable<Assignment>> GetAllWithDetailsAsync();
-
-        /// <summary>Gets an assignment by identifier with details asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>
-        ///   The Assignment
-        /// </returns>
-        Task<Assignment> GetByIdWithDetailsAsync(int id);
-    }
+    Task<IReadOnlyCollection<Assignment>> GetAllWithDetailsAsync(CancellationToken cancellationToken);
+    
+    Task<Assignment> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken);
+    
+    Task<IReadOnlyCollection<Assignment>> GetByExpressionAsync(Expression<Func<Assignment, bool>> expression, CancellationToken cancellationToken);
 }

@@ -1,23 +1,14 @@
-﻿using DataAccessLayer.Entities;
+using System.Linq.Expressions;
+using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.Interfaces
+namespace DataAccessLayer.Interfaces;
+
+public interface IProjectRepository : IRepository<Project>
 {
-    /// <summary>
-    ///   Describes a project repository
-    /// </summary>
-    public interface IProjectRepository : IRepository<Project>
-    {
-        /// <summary>Gets all projects with details asynchronous.</summary>
-        /// <returns>
-        ///   Projects
-        /// </returns>
-        Task<IEnumerable<Project>> GetAllWithDetailsAsync();
+    Task<IReadOnlyCollection<Project>> GetAllWithDetailsAsync(CancellationToken cancellationToken);
 
-        /// <summary>Gets a project by identifier with details asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>
-        ///   Project
-        /// </returns>
-        Task<Project> GetByIdWithDetailsAsync(int id);
-    }
+    Task<Project> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken);
+    
+    Task<IReadOnlyCollection<Project>> GetByExpressionAsync(Expression<Func<Project, bool>> expression, CancellationToken cancellationToken);
+
 }

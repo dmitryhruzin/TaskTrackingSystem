@@ -1,34 +1,14 @@
-﻿namespace BuisnessLogicLayer.Interfaces
+namespace BuisnessLogicLayer.Interfaces;
+
+public interface ICrud<T> where T : BaseEntity
 {
-    /// <summary>
-    ///   Describes a Crud service
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ICrud<T> where T : class
-    {
-        /// <summary>Gets all models asynchronous.</summary>
-        /// <returns>
-        ///   Models
-        /// </returns>
-        Task<IEnumerable<T>> GetAllAsync();
+    Task<IReadOnlyCollection<T>> GetAllAsync(CancellationToken cancellationToken);
 
-        /// <summary>Gets the model by identifier asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>
-        ///   Model
-        /// </returns>
-        Task<T> GetByIdAsync(int id);
+    Task<T> GetByIdAsync(int id, CancellationToken cancellationToken);
+    
+    Task AddAsync(T model, CancellationToken cancellationToken);
 
-        /// <summary>Adds the model asynchronous.</summary>
-        /// <param name="model">The model.</param>
-        Task AddAsync(T model);
-
-        /// <summary>Updates the model asynchronous.</summary>
-        /// <param name="model">The model.</param>
-        Task UpdateAsync(T model);
-
-        /// <summary>Deletes the model by id asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        Task DeleteAsync(int id);
-    }
+    Task UpdateAsync(T model, CancellationToken cancellationToken);
+    
+    Task DeleteAsync(int id, CancellationToken cancellationToken);
 }

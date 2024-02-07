@@ -1,11 +1,8 @@
-﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.Interfaces
+namespace DataAccessLayer.Interfaces;
+
+public interface IAssignmentStatusRepository : IRepository<AssignmentStatus>
 {
-    /// <summary>
-    ///   Describes an assignment status repository
-    /// </summary>
-    public interface IAssignmentStatusRepository : IRepository<AssignmentStatus>
-    {
-    }
+    
 }

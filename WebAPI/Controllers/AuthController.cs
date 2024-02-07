@@ -1,58 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BuisnessLogicLayer.Requests.Users;
+using BuisnessLogicLayer.Responses.Tokens;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    /// <summary>
-    ///   AuthController
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        readonly IAuthService authService;
-
-        /// <summary>Initializes a new instance of the <see cref="AuthController" /> class.</summary>
-        /// <param name="authService">The authentication service.</param>
-        public AuthController(IAuthService authService)
+        private readonly IMediator _mediator;
+        
+        public AuthController(IMediator mediator)
         {
-            this.authService = authService;
+            _mediator = mediator;
         }
-
-        /// <summary>Logins.</summary>
-        /// <param name="loginModel">The login model.</param>
-        /// <returns>
-        ///   ObjectResult
-        /// </returns>
+        
         [HttpPost]
-        public async Task<ActionResult<TokenModel>> Login([FromBody] LoginModel loginModel)
+        public async Task<ActionResult<GetTokenResponse>> Login([FromBody] LoginRequest request)
         {
-            var model = await authService.Login(loginModel);
+            var response = await _mediator.Send(request);
 
-            return Ok(model);
+            return Ok(response);
         }
-
-        /// <summary>Forgot Password.</summary>
-        /// <param name="model">The forgot password model.</param>
-        /// <returns>
-        ///   ObjectResult
-        /// </returns>
+        
         [HttpPost("forgot")]
-        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
-            await authService.ForgotPassword(model);
+            await _mediator.Send(request);
 
             return Ok();
         }
-
-        /// <summary>Reset Password.</summary>
-        /// <param name="model">The reset password model.</param>
-        /// <returns>
-        ///   ObjectResult
-        /// </returns>
+        
         [HttpPost("reset")]
-        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            await authService.ResetPassword(model);
+            await _mediator.Send(request);
 
             return Ok();
         }

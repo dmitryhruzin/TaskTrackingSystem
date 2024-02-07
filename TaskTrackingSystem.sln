@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuisnessLogicLayer", "Buisn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{BABCA576-4F44-463E-AFFE-33A19604DAC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTrackingTest", "TaskTrackingTest\TaskTrackingTest.csproj", "{9CA94ABA-632B-403A-8B8B-E7AC8BD64FCB}"
-EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "ui-react", "ui-react\ui-react.esproj", "{6E56EAC8-8FF4-4B78-A943-F1C8706AD9A6}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{BABCA576-4F44-463E-AFFE-33A19604DAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BABCA576-4F44-463E-AFFE-33A19604DAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BABCA576-4F44-463E-AFFE-33A19604DAC9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CA94ABA-632B-403A-8B8B-E7AC8BD64FCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CA94ABA-632B-403A-8B8B-E7AC8BD64FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CA94ABA-632B-403A-8B8B-E7AC8BD64FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CA94ABA-632B-403A-8B8B-E7AC8BD64FCB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E56EAC8-8FF4-4B78-A943-F1C8706AD9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E56EAC8-8FF4-4B78-A943-F1C8706AD9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E56EAC8-8FF4-4B78-A943-F1C8706AD9A6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU

@@ -1,0 +1,3 @@
+namespace BuisnessLogicLayer.Responses.AssignmentStatuses;
+
+public record GetAssignmentStatusesResponse(IReadOnlyCollection<GetAssignmentStatusResponse> AssignmentStatuses);
