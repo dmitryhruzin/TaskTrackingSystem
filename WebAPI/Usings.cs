@@ -1,0 +1,9 @@
+﻿global using DataAccessLayer.DataBase;
+global using DataAccessLayer.Entities;
+global using DataAccessLayer.Interfaces;
+global using BuisnessLogicLayer.Interfaces;
+global using BuisnessLogicLayer.Models;
+global using BuisnessLogicLayer.Validation;
+global using BuisnessLogicLayer.Services;
+global using BuisnessLogicLayer.Services.TokenServices;
+global using BuisnessLogicLayer.Validation.Validators;
